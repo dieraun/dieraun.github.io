@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 140 140" width="140" height="140" role="img" aria-labelledby="avatar-title">
+  <title id="avatar-title">Dieraun 的抽象字母头像</title>
+  <defs>
+    <linearGradient id="avatar-bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#f2efe5"/>
+      <stop offset="1" stop-color="#ddd8c8"/>
+    </linearGradient>
+    <linearGradient id="avatar-ink" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#377a5b"/>
+      <stop offset="1" stop-color="#245440"/>
+    </linearGradient>
+  </defs>
+
+  <circle cx="70" cy="70" r="68" fill="url(#avatar-bg)"/>
+  <circle cx="70" cy="70" r="57" fill="url(#avatar-ink)"/>
+
+  <!-- 一个用单线画出的 D，像一枚安静的印章 -->
+  <path d="M50 41h20.5C88 41 101 51.5 101 70s-13 29-30.5 29H50V41Z"
+        fill="none" stroke="#f7f6f2" stroke-width="6.5" stroke-linejoin="round"/>
+  <path d="M50 41v58" fill="none" stroke="#f7f6f2" stroke-width="6.5" stroke-linecap="round"/>
+
+  <!-- 句点与细弧，给标记一点呼吸 -->
+  <circle cx="101" cy="39" r="4.5" fill="#c7a15a"/>
+  <path d="M24 70a46 46 0 0 1 8-26" fill="none" stroke="#c7a15a" stroke-width="2" stroke-linecap="round" opacity="0.9"/>
+</svg>

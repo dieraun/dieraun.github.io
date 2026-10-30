@@ -1,0 +1,18 @@
+# 构建产物：由 npm run build 生成，不提交到仓库
+dist/
+
+# 本项目没有 npm 依赖，留作兜底
+node_modules/
+
+# 系统与编辑器文件
+.DS_Store
+Thumbs.db
+Desktop.ini
+.vscode/
+.idea/
+*.swp
+
+# 日志与环境变量
+*.log
+.env
+.env.*
