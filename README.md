@@ -362,6 +362,21 @@ permissions:
 - 工作流是否正确设置了 `BASE_PATH`；
 - 仓库 **Settings → Pages → Source** 是否选择了 GitHub Actions。
 
+### Source 选择 GitHub Actions 时报 “Server error”
+
+这是 GitHub 创建 Pages 站点时返回的服务端错误，不是构建脚本的问题。按顺序检查：
+
+1. 仓库必须已有 `main` 分支和至少一次提交，且 `.github/workflows/deploy.yml` 已推送。
+2. 仓库必须是 **public**；private 仓库需要 GitHub Pro / Team 等支持 Pages 的方案。
+3. 当前账号必须是仓库 **Admin**，并已完成邮箱验证。
+4. 组织仓库需确认组织没有禁用 Pages；企业账号需确认策略允许。
+5. 打开 [GitHub Status](https://www.githubstatus.com/) 看是否有 Pages 故障；也可以换无痕窗口或稍后重试。
+6. 如果之前配置过自定义域名，先移除域名再切换 Source，成功后再加回来。
+
+工作流里的 `configure-pages` 已开启 `enablement: true`，会在首次运行时尝试通过 API 自动创建 Pages 站点。推送最新工作流后，到 **Actions → Deploy blog to GitHub Pages → Run workflow** 手动运行一次，通常比在设置页反复点 Save 更稳。
+
+如果仍失败，记录报错时浏览器 Network 面板里 `POST /repos/<owner>/<repo>/pages` 的状态码（常见为 403 / 422 / 500），它能直接指出是权限、仓库状态还是 GitHub 服务问题。
+
 ### 构建报错 “日期格式必须为 YYYY-MM-DD”
 
 `date` / `updated` 必须是真实存在的日期，例如 `2026-11-02`，不能写 `2026/11/02` 或 `11-02`。

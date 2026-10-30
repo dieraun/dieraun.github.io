@@ -47,6 +47,10 @@ jobs:
 
       - name: Configure Pages
         uses: actions/configure-pages@v5
+        with:
+          # 如果仓库尚未在 Settings → Pages 中启用，
+          # 允许工作流通过 API 自动创建 Pages 站点（需要 pages: write）
+          enablement: true
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
