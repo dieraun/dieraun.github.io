@@ -67,8 +67,65 @@ const siteConfig = {
   },
 
   // ---- 项目 -----------------------------------------------------
-  // 每项：repo 对应 GitHub 仓库名；clone/run 显示在“快速上手”。
+  // 项目区直接展示 dieraun 的全部公开仓库；repo 必须与 GitHub 仓库名一致。
+  // clone/run 显示在卡片里的“快速上手”，按仓库实际入口维护。
   projects: [
+    {
+      repo: "Formflux",
+      title: "Formflux",
+      subtitle: "本地优先 · 多媒体工具箱",
+      stack: "Rust · 本地优先 · 无遥测",
+      highlights: [
+        "完全离线运行，媒体、图像与文档不离开本机。",
+        "统一处理多媒体、图像、文档与哈希，减少零散脚本。",
+        "无账号、无上传、无遥测，构建产物可直接审计。",
+      ],
+      clone: "git clone https://github.com/dieraun/Formflux.git",
+      run: "cargo run --release",
+      tags: ["Rust", "本地优先", "工具箱", "离线"],
+    },
+    {
+      repo: "RePKG-Enhanced",
+      title: "RePKG-Enhanced",
+      subtitle: "Wallpaper Engine · PKG 解包",
+      stack: "C# · .NET · 流式 IO",
+      highlights: [
+        "解析 Wallpaper Engine PKG 容器与资源索引。",
+        "大文件流式读取，避免整包载入内存。",
+        "支持批量处理与 GUI，保留原始目录结构。",
+      ],
+      clone: "git clone https://github.com/dieraun/RePKG-Enhanced.git",
+      run: "dotnet run --project RePKG",
+      tags: ["C#", "Wallpaper Engine", "解包", "批处理"],
+    },
+    {
+      repo: "Device-Viewer",
+      title: "Device-Viewer",
+      subtitle: "局域网低延迟画面串流",
+      stack: "Rust · WebSocket · egui · 并发",
+      highlights: [
+        "采集端与查看端分离，帧数据只走局域网 WebSocket，不经过公网中转。",
+        "有界通道与背压控制，弱网下丢帧而不是无限堆积内存。",
+        "CLI 启动 + egui 查看器，跨平台构建；仅监听显式绑定的内网地址。",
+      ],
+      clone: "git clone https://github.com/dieraun/Device-Viewer.git",
+      run: "cargo run --release -- --bind 0.0.0.0:8080",
+      tags: ["串流", "Rust", "局域网", "egui"],
+    },
+    {
+      repo: "dieraun.github.io",
+      title: "dieraun.github.io",
+      subtitle: "本站 · 静态构建管线",
+      stack: "Node.js · 原生 CSS/JS · GitHub Pages",
+      highlights: [
+        "零运行时依赖：Markdown 与模板在构建时生成静态 HTML。",
+        "三态主题、文章目录与标签筛选均由原生 JS 完成。",
+        "GitHub Actions 自动构建并部署 Pages，产物可直接审计。",
+      ],
+      clone: "git clone https://github.com/dieraun/dieraun.github.io.git",
+      run: "npm run build",
+      tags: ["静态站点", "Node.js", "GitHub Pages", "原生 Web"],
+    },
     {
       repo: "rpa-extract-analyzer",
       title: "rpa-extract-analyzer",
@@ -112,83 +169,18 @@ const siteConfig = {
       tags: ["逆向", "RPA", "解包", "Python"],
     },
     {
-      repo: "Device-Viewer",
-      title: "device-viewer",
-      subtitle: "局域网低延迟画面串流",
-      stack: "Rust · WebSocket · egui · 并发",
+      repo: "myweblearn114",
+      title: "myweblearn114",
+      subtitle: "HTML · 学习实验",
+      stack: "HTML · CSS · 无构建",
       highlights: [
-        "采集端与查看端分离，帧数据只走局域网 WebSocket，不经过公网中转。",
-        "有界通道与背压控制，弱网下丢帧而不是无限堆积内存。",
-        "CLI 启动 + egui 查看器，跨平台构建；仅监听显式绑定的内网地址。",
+        "早期 HTML/CSS 学习页，保留为练习记录。",
+        "纯静态文件，直接用浏览器打开即可。",
+        "不引入框架与构建步骤。",
       ],
-      clone: "git clone https://github.com/dieraun/Device-Viewer.git",
-      run: "cargo run --release -- --bind 0.0.0.0:8080",
-      tags: ["串流", "Rust", "局域网", "egui"],
-    },
-  ],
-
-  // 预留项目位：后续实现 Wallpaper Engine 解包工具时替换为正式 projects 项。
-  plannedProject: {
-    code: "05 / PLANNED",
-    title: "wallpaper-engine-pkg",
-    subtitle: "Wallpaper Engine pkg / mpkg 解包",
-    stack: "Rust · 归档解析 · CLI + GUI",
-    description:
-      "目标：解析 pkg / mpkg 容器与资源索引，提供只读挂载、资源导出与完整性校验。",
-    tags: ["逆向", "格式解析", "Rust", "规划"],
-  },
-
-  // ---- GitHub 全部仓库 ------------------------------------------
-  // 先作为静态快照随 HTML 输出；main.js 会尝试从 GitHub API 刷新，
-  // 接口不可用或触发限流时继续显示这份快照。
-  repositories: [
-    {
-      name: "Formflux",
-      description: "本地优先的离线多媒体、图像、文档与哈希工具箱。",
-      language: "Rust",
-      url: "https://github.com/dieraun/Formflux",
-    },
-    {
-      name: "RePKG-Enhanced",
-      description: "跨平台 Wallpaper Engine PKG 解包器，支持流式大文件与批量处理。",
-      language: "C#",
-      url: "https://github.com/dieraun/RePKG-Enhanced",
-    },
-    {
-      name: "Device-Viewer",
-      description: "跨平台硬件信息查看器，Rust + egui，提供 GUI 与 CLI。",
-      language: "Rust",
-      url: "https://github.com/dieraun/Device-Viewer",
-    },
-    {
-      name: "dieraun.github.io",
-      description: "本站源码、模板与零依赖构建脚本。",
-      language: "JavaScript",
-      url: "https://github.com/dieraun/dieraun.github.io",
-    },
-    {
-      name: "rpa-extract-analyzer",
-      description: "Ren'Py RPA 只读解析与静态密钥提取工具。",
-      language: "Python",
-      url: "https://github.com/dieraun/rpa-extract-analyzer",
-    },
-    {
-      name: "mp4_merger",
-      description: "基于 FFmpeg 的 Windows 批量视频合并工具。",
-      language: "Python",
-      url: "https://github.com/dieraun/mp4_merger",
-    },
-    {
-      name: "campbuddy-rpa-unpacker-",
-      description: "CampBuddy RPA-3.0 资源归档解包工具。",
-      language: "Python",
-      url: "https://github.com/dieraun/campbuddy-rpa-unpacker-",
-    },
-    {
-      name: "myweblearn114",
-      description: "HTML 学习与实验页面。",
-      language: "HTML",
-      url: "https://github.com/dieraun/myweblearn114",
+      clone: "git clone https://github.com/dieraun/myweblearn114.git",
+      run: "python -m http.server 8000",
+      tags: ["HTML", "CSS", "学习", "实验"],
     },
   ],
 

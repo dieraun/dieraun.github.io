@@ -338,7 +338,7 @@ async function build() {
     "tags/index.html",
     templates.layout({
       title: "标签",
-      description: `按标签浏览 ${site.title} 的文章：技术、设计、阅读与生活随笔。`,
+      description: `按标签浏览 ${site.title} 的文章：逆向、格式解析、性能与底层工程。`,
       canonicalPath: "/tags/",
       activeNav: "tags",
       bodyClass: "page-tags",

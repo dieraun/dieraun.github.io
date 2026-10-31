@@ -14,19 +14,6 @@ import {
 } from "./utils.mjs";
 import { renderToc } from "./markdown.mjs";
 
-// GitHub 语言色只用于仓库列表的小圆点，取常见语言的近似色。
-const LANGUAGE_COLORS = {
-  Rust: "#dea584",
-  Python: "#3572a5",
-  "C#": "#178600",
-  JavaScript: "#f1e05a",
-  TypeScript: "#3178c6",
-  HTML: "#e34c26",
-  Shell: "#89e051",
-};
-
-const languageColor = (language) => LANGUAGE_COLORS[language] || "#8b9bab";
-
 const ICONS = {
   sun: `<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.93 4.93l1.42 1.42M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.42-1.42M17.66 6.34l1.41-1.41"></path></svg>`,
   moon: `<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M21 12.8A8.4 8.4 0 1 1 11.2 3a6.6 6.6 0 0 0 9.8 9.8Z"></path></svg>`,
@@ -289,67 +276,6 @@ export function createTemplates(site, basePath) {
     </article>`;
   };
 
-  const plannedCard = () => {
-    const planned = site.plannedProject;
-    if (!planned) return "";
-    return `
-    <article class="project-card project-card--planned">
-      <header class="project-card__head">
-        <div>
-          <p class="project-card__index">${escapeHtml(planned.code)}</p>
-          <h3 class="project-card__title">${escapeHtml(planned.title)}</h3>
-        </div>
-        <span class="project-card__status">预留位置</span>
-      </header>
-      <p class="project-card__subtitle">${escapeHtml(planned.subtitle)}</p>
-      <p class="project-card__planned-description">${escapeHtml(planned.description)}</p>
-      <dl class="project-card__spec">
-        <div class="project-card__row">
-          <dt>技术栈</dt>
-          <dd class="project-card__stack">${escapeHtml(planned.stack)}</dd>
-        </div>
-      </dl>
-      <footer class="project-card__footer">
-        <div class="tag-list">${planned.tags.map((tag) => `<span class="tag">${escapeHtml(tag)}</span>`).join("")}</div>
-      </footer>
-    </article>`;
-  };
-
-  const repositoryList = () => {
-    const repositories = Array.isArray(site.repositories) ? site.repositories : [];
-    const repoCount = String(repositories.length).padStart(2, "0");
-
-    return `
-      <section class="repos" id="repositories" aria-labelledby="repos-title" data-repo-section data-github-user="${escapeAttr(site.author.github)}">
-        <div class="repos__head">
-          <div class="repos__heading">
-            <p class="eyebrow">GITHUB / <span data-repo-count>${repoCount}</span></p>
-            <h2 class="repos__title" id="repos-title">全部仓库</h2>
-            <p class="repos__intro">公开仓库，按最近更新排序。接口不可用时显示构建时的快照。</p>
-          </div>
-          <a class="text-link" href="https://github.com/${escapeAttr(site.author.github)}?tab=repositories" target="_blank" rel="noopener noreferrer">在 GitHub 查看 ${ICONS.arrowRight}</a>
-        </div>
-        <div class="repo-grid" data-repo-list>
-          ${repositories
-            .map(
-              (repo) => `
-            <a class="repo-item" href="${escapeAttr(repo.url)}" target="_blank" rel="noopener noreferrer">
-              <span class="repo-item__top">
-                <span class="repo-item__name">${escapeHtml(repo.name)}</span>
-                <span class="repo-item__arrow" aria-hidden="true">↗</span>
-              </span>
-              <span class="repo-item__desc">${escapeHtml(repo.description || "暂无描述。")}</span>
-              <span class="repo-item__meta">
-                <span class="repo-item__lang"><span class="repo-item__dot" style="--lang-color:${languageColor(repo.language)}"></span>${escapeHtml(repo.language || "Other")}</span>
-                <span>公开</span>
-              </span>
-            </a>`,
-            )
-            .join("")}
-        </div>
-      </section>`;
-  };
-
   const home = ({ posts, tags }) => {
     const projects = Array.isArray(site.projects) ? site.projects : [];
     const projectCount = String(projects.length).padStart(2, "0");
@@ -392,21 +318,19 @@ export function createTemplates(site, basePath) {
         <section class="section projects" id="projects" aria-labelledby="projects-title">
           <div class="section__head projects__head">
             <div class="projects__heading">
-              <p class="eyebrow">SELECTED WORK / ${projectCount}</p>
-              <h2 class="section__title" id="projects-title">项目</h2>
-              <p class="projects__intro">四个已发布工具与一个预留位。只写可验证的实现、边界与取舍。</p>
+              <p class="eyebrow">ALL REPOSITORIES / ${projectCount}</p>
+              <h2 class="section__title" id="projects-title">开源项目</h2>
+              <p class="projects__intro">八个公开仓库，覆盖逆向、归档解析、媒体处理与本地工具。只写可验证的实现、边界与取舍。</p>
             </div>
             <div class="projects__links">
-              <a class="text-link" href="#repositories">全部仓库 ${ICONS.arrowRight}</a>
+              <a class="text-link" href="https://github.com/${escapeAttr(site.author.github)}?tab=repositories" target="_blank" rel="noopener noreferrer">GitHub 主页 ${ICONS.arrowRight}</a>
               <a class="text-link" href="${url("/posts/")}">技术笔记 ${ICONS.arrowRight}</a>
             </div>
           </div>
           <div class="project-grid">
             ${projects.map((project, index) => projectCard(project, index)).join("")}
-            ${plannedCard()}
           </div>
         </section>
-        ${repositoryList()}
       </div>`;
   };
 
