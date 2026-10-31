@@ -1,28 +1,33 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 420 420" width="420" height="420" role="img" aria-labelledby="scale-title">
-  <title id="scale-title">阅读节奏：一组刻度、弧线与书页的抽象图</title>
+  <title id="scale-title">蓝白几何插画：一组刻度、弧线与阅读的节奏</title>
   <defs>
     <linearGradient id="scale-paper" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#efebdf"/>
-      <stop offset="1" stop-color="#e2ddcf"/>
+      <stop offset="0" stop-color="#ffffff"/>
+      <stop offset="1" stop-color="#eef5ff"/>
+    </linearGradient>
+    <linearGradient id="scale-ink" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#2563eb"/>
+      <stop offset="1" stop-color="#38bdf8"/>
     </linearGradient>
   </defs>
 
-  <rect x="16" y="16" width="388" height="388" rx="32" fill="url(#scale-paper)"/>
+  <rect x="16" y="16" width="388" height="388" rx="36" fill="url(#scale-paper)"/>
+  <circle cx="210" cy="204" r="158" fill="#dbeafe" opacity="0.42"/>
 
   <!-- 外圈：阅读的边界 -->
-  <circle cx="210" cy="204" r="132" fill="none" stroke="#2e6a4f" stroke-width="1.4" opacity="0.32"/>
-  <circle cx="210" cy="204" r="104" fill="none" stroke="#2e6a4f" stroke-width="1.2" opacity="0.22"
+  <circle cx="210" cy="204" r="132" fill="none" stroke="#2563eb" stroke-width="1.4" opacity="0.32"/>
+  <circle cx="210" cy="204" r="104" fill="none" stroke="#2563eb" stroke-width="1.2" opacity="0.24"
           stroke-dasharray="2 9" stroke-linecap="round"/>
 
   <!-- 节奏线：像一段被拉长的呼吸 -->
   <path d="M92 246C112 150 162 116 210 116s98 34 118 130"
-        fill="none" stroke="#2e6a4f" stroke-width="2.6" stroke-linecap="round"/>
-  <circle cx="210" cy="116" r="7" fill="#b98a3c"/>
-  <circle cx="210" cy="116" r="14" fill="none" stroke="#b98a3c" stroke-width="1" opacity="0.45"/>
+        fill="none" stroke="url(#scale-ink)" stroke-width="2.8" stroke-linecap="round"/>
+  <circle cx="210" cy="116" r="7" fill="#38bdf8"/>
+  <circle cx="210" cy="116" r="14" fill="none" stroke="#38bdf8" stroke-width="1" opacity="0.5"/>
 
   <!-- 刻度尺 -->
-  <path d="M78 282H342" fill="none" stroke="#2e6a4f" stroke-width="1.6" opacity="0.65"/>
-  <g stroke="#2e6a4f" stroke-width="1.4" opacity="0.55">
+  <path d="M78 282H342" fill="none" stroke="#2563eb" stroke-width="1.6" opacity="0.6"/>
+  <g stroke="#2563eb" stroke-width="1.4" opacity="0.5">
     <path d="M94 282v10"/><path d="M118 282v18"/><path d="M142 282v10"/>
     <path d="M166 282v24"/><path d="M190 282v10"/><path d="M214 282v18"/>
     <path d="M238 282v10"/><path d="M262 282v24"/><path d="M286 282v10"/>
@@ -30,9 +35,9 @@
   </g>
 
   <!-- 书页：两条安静的弧 -->
-  <path d="M150 326c22-9 42-9 60 0 18-9 38-9 60 0" fill="none" stroke="#2e6a4f" stroke-width="2" stroke-linecap="round" opacity="0.55"/>
-  <path d="M166 340c16-5 30-5 44 0 14-5 28-5 44 0" fill="none" stroke="#2e6a4f" stroke-width="1.4" stroke-linecap="round" opacity="0.32"/>
+  <path d="M150 326c22-9 42-9 60 0 18-9 38-9 60 0" fill="none" stroke="#2563eb" stroke-width="2" stroke-linecap="round" opacity="0.55"/>
+  <path d="M166 340c16-5 30-5 44 0 14-5 28-5 44 0" fill="none" stroke="#2563eb" stroke-width="1.4" stroke-linecap="round" opacity="0.32"/>
 
   <!-- 一个不喧哗的标点 -->
-  <circle cx="332" cy="98" r="5" fill="#b98a3c" opacity="0.9"/>
+  <circle cx="332" cy="98" r="5" fill="#38bdf8" opacity="0.95"/>
 </svg>

@@ -13,6 +13,7 @@ Dieraun 的个人静态博客。用 Markdown 写作，用原生 Web 呈现；没
 - **纯静态**：构建后只有 HTML、CSS、JS 和图片，可直接部署到 GitHub Pages、Cloudflare Pages 或任意静态托管。
 - **零运行时依赖**：Markdown 解析、代码高亮、页面模板和开发服务器全部使用 Node.js 内置模块实现。
 - **三态主题**：跟随系统 / 浅色 / 深色，选择会保存在本地；首屏内联脚本避免主题闪烁。
+- **项目主页**：蓝白极简首页，用四张大卡片展示 GitHub 开源项目、快速开始命令与技术标签。
 - **移动端适配**：固定页头、汉堡菜单、单列卡片、可折叠文章目录，覆盖手机、平板和桌面。
 - **阅读体验**：约 43rem 的正文宽度、1.9 倍行高、粘性目录、阅读时间估算、上一篇 / 下一篇。
 - **代码友好**：代码块带语言标签、语法高亮和一键复制，支持横向滚动，不撑破页面。
@@ -153,14 +154,15 @@ npm run dev
 | `author.name` | 作者名，用于页脚、关于页和文章元信息 |
 | `author.email` | 联系邮箱 |
 | `author.github` | GitHub 用户名，用于页脚和关于页链接 |
-| `author.bio` | 首页底部「关于」区域的短简介 |
+| `author.bio` | 关于页使用的短简介 |
 | `url` | **站点 origin，不要带仓库子路径**，例如 `https://dieraun.github.io` |
 | `basePath` | 本地默认路径；Actions 会用 `BASE_PATH` 覆盖，通常保持 `/` |
 | `locale` | 页面语言，默认 `zh-CN` |
 | `theme.light` / `theme.dark` | 浏览器地址栏等使用的主题色 |
 | `nav` | 导航项；新增项时 `href` 必须是构建后存在的路径 |
 | `hero` | 首页大标题、眉题和简介 |
-| `stack` | 关于页 / 首页展示的技术栈 |
+| `projects` | 首页项目卡片；每项含 `repo`、`kicker`、`title`、`description`、`usage`、`command`、`tags`、`icon` |
+| `stack` | 关于页展示的技术栈 |
 | `footerNote` | 页脚说明 |
 | `ogImage` | 社交分享图路径，默认 `/og-cover.png` |
 
@@ -170,7 +172,7 @@ npm run dev
 
 | 文件 | 用途 |
 | --- | --- |
-| `src/assets/images/avatar.svg` | 关于页与首页头像 |
+| `src/assets/images/avatar.svg` | 关于页头像 |
 | `src/assets/images/reading-scale.svg` | 首页右侧插画 |
 | `src/public/favicon.svg` | 浏览器标签页图标 |
 | `src/public/apple-touch-icon.png` | iOS 添加到主屏幕图标（180×180） |

@@ -25,6 +25,10 @@ const ICONS = {
   mail: `<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="3" y="5" width="18" height="14" rx="2"></rect><path d="m3.5 6.5 8.5 6 8.5-6"></path></svg>`,
   rss: `<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true" focusable="false"><circle cx="5.5" cy="18.5" r="1.6" fill="currentColor" stroke="none"></circle><path d="M4 11a9 9 0 0 1 9 9M4 4a16 16 0 0 1 16 16"></path></svg>`,
   clock: `<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="8.5"></circle><path d="M12 7.5V12l3 1.8"></path></svg>`,
+  chart: `<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M4 19V5M4 19h16"></path><path d="M8 15v-4M12 15V7M16 15v-6M20 15V9"></path></svg>`,
+  video: `<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="3" y="5" width="18" height="14" rx="2"></rect><path d="m10 9 5 3-5 3V9Z"></path></svg>`,
+  box: `<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m12 3 8 4.5v9L12 21l-8-4.5v-9L12 3Z"></path><path d="m4 7.5 8 4.5 8-4.5M12 12v9"></path></svg>`,
+  monitor: `<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="3" y="4" width="18" height="12" rx="2"></rect><path d="M8 20h8M12 16v4"></path></svg>`,
 };
 
 export function createTemplates(site, basePath) {
@@ -74,6 +78,7 @@ export function createTemplates(site, basePath) {
           <p class="site-footer__note">${escapeHtml(site.footerNote)}</p>
         </div>
         <div class="site-footer__links">
+          <a href="${url("/posts/")}">文章</a>
           <a href="https://github.com/${escapeAttr(site.author.github)}" rel="me noopener noreferrer">GitHub ${ICONS.github}</a>
           <a href="${url("/feed.xml")}">RSS ${ICONS.rss}</a>
           <a href="mailto:${escapeAttr(site.author.email)}">邮箱 ${ICONS.mail}</a>
@@ -232,41 +237,59 @@ export function createTemplates(site, basePath) {
     </article>`;
   };
 
-  const home = ({ posts, tags, latest }) => {
-    const featured = posts[0];
-    const rest = posts.slice(1, 4);
-    const latestDate = posts[0] ? formatDate(posts[0].date, "long") : "";
+  const projectCard = (project, index) => {
+    const repoUrl = `https://github.com/${site.author.github}/${project.repo}`;
+    const tags = Array.isArray(project.tags) ? project.tags : [];
+    const icon = ICONS[project.icon] || ICONS.chart;
 
-    const featuredBlock = featured
-      ? `
-      <article class="featured">
-        <div class="featured__meta">
-          <span class="eyebrow">最新文章</span>
-          <time datetime="${formatDate(featured.date, "iso")}">${formatDate(featured.date, "long")}</time>
+    return `
+    <article class="project-card">
+      <div class="project-card__top">
+        <span class="project-card__index" aria-hidden="true">${String(index + 1).padStart(2, "0")}</span>
+        <span class="project-card__icon" aria-hidden="true">${icon}</span>
+      </div>
+      <p class="project-card__kicker">
+        <span>${escapeHtml(project.kicker)}</span>
+        <code>${escapeHtml(site.author.github)}/${escapeHtml(project.repo)}</code>
+      </p>
+      <h3 class="project-card__title"><a href="${escapeAttr(repoUrl)}" target="_blank" rel="noopener noreferrer">${escapeHtml(project.title)}</a></h3>
+      <p class="project-card__description">${escapeHtml(project.description)}</p>
+      <div class="project-card__usage">
+        <p class="project-card__usage-label">快速开始</p>
+        <p class="project-card__usage-text">${escapeHtml(project.usage)}</p>
+        <code class="project-card__command"><span>git clone https://github.com/${escapeHtml(site.author.github)}/${escapeHtml(project.repo)}.git</span><span>${escapeHtml(project.command)}</span></code>
+      </div>
+      <div class="project-card__footer">
+        <div class="tag-list">
+          ${tags.map((tag) => `<span class="tag">#${escapeHtml(tag)}</span>`).join("")}
         </div>
-        <h2 class="featured__title"><a href="${url(featured.url)}">${escapeHtml(featured.title)}</a></h2>
-        <p class="featured__summary">${escapeHtml(featured.summary)}</p>
-        <div class="featured__footer">
-          <div class="tag-list">${tagLinks(featured.tags)}</div>
-          <span class="meta-dot" aria-hidden="true">·</span>
-          <span class="featured__reading">${featured.readingMinutes} 分钟阅读</span>
-          <a class="text-link featured__more" href="${url(featured.url)}">读下去 ${ICONS.arrowRight}</a>
-        </div>
-      </article>`
-      : "";
+        <a class="project-card__repo" href="${escapeAttr(repoUrl)}" target="_blank" rel="noopener noreferrer" aria-label="在 GitHub 查看 ${escapeAttr(project.repo)}">
+          查看仓库 ${ICONS.arrowRight}
+        </a>
+      </div>
+    </article>`;
+  };
 
-    const latestBlock = rest.length
+  const home = ({ posts, tags }) => {
+    const projects = Array.isArray(site.projects) ? site.projects : [];
+    const projectCount = String(projects.length).padStart(2, "0");
+
+    const projectsBlock = projects.length
       ? `
-      <section class="section" aria-labelledby="latest-title">
-        <div class="section__head">
-          <div>
-            <p class="eyebrow">继续阅读</p>
-            <h2 class="section__title" id="latest-title">最近更新</h2>
+      <section class="section projects" id="projects" aria-labelledby="projects-title">
+        <div class="section__head projects__head">
+          <div class="projects__heading">
+            <p class="eyebrow">Open Source · ${projectCount}</p>
+            <h2 class="section__title" id="projects-title">最近在做的开源项目</h2>
+            <p class="projects__intro">几个小工具，解决真实工作里反复出现的问题。都可以单独 clone、运行。</p>
           </div>
-          <a class="text-link" href="${url("/posts/")}">全部文章 ${ICONS.arrowRight}</a>
+          <div class="projects__links">
+            <a class="text-link" href="https://github.com/${escapeAttr(site.author.github)}?tab=repositories" target="_blank" rel="noopener noreferrer">全部仓库 ${ICONS.arrowRight}</a>
+            <a class="text-link" href="${url("/posts/")}">技术文章 ${ICONS.arrowRight}</a>
+          </div>
         </div>
-        <div class="post-grid">
-          ${rest.map((post) => postCard(post)).join("")}
+        <div class="project-grid">
+          ${projects.map((project, index) => projectCard(project, index)).join("")}
         </div>
       </section>`
       : "";
@@ -279,13 +302,13 @@ export function createTemplates(site, basePath) {
             <h1 class="hero__title">${site.hero.titleLines.map((line) => `<span>${escapeHtml(line)}</span>`).join("")}</h1>
             <p class="hero__description">${escapeHtml(site.hero.description)}</p>
             <div class="hero__actions">
-              <a class="button button--primary" href="${url("/posts/")}">浏览文章 ${ICONS.arrowRight}</a>
+              <a class="button button--primary" href="${url("/#projects")}">查看项目 ${ICONS.arrowRight}</a>
               <a class="button button--ghost" href="${url("/about/")}">关于我</a>
             </div>
             <dl class="hero__stats">
-              <div><dt>文章</dt><dd>${posts.length}</dd></div>
+              <div><dt>开源项目</dt><dd>${projectCount}</dd></div>
+              <div><dt>技术文章</dt><dd>${posts.length}</dd></div>
               <div><dt>标签</dt><dd>${tags.length}</dd></div>
-              <div><dt>最近更新</dt><dd class="hero__stats-date">${escapeHtml(latestDate)}</dd></div>
             </dl>
           </div>
           <div class="hero__art" aria-hidden="true">
@@ -295,18 +318,7 @@ export function createTemplates(site, basePath) {
       </section>
 
       <div class="container">
-        ${featuredBlock}
-        ${latestBlock}
-
-        <section class="home-about" aria-labelledby="home-about-title">
-          <img class="home-about__avatar" src="${url("/assets/images/avatar.svg")}" alt="" width="88" height="88" loading="lazy" decoding="async">
-          <div class="home-about__body">
-            <p class="eyebrow">关于我</p>
-            <h2 class="home-about__title" id="home-about-title">${escapeHtml(site.author.name)}</h2>
-            <p>${escapeHtml(site.author.bio)}</p>
-            <a class="text-link" href="${url("/about/")}">了解更多 ${ICONS.arrowRight}</a>
-          </div>
-        </section>
+        ${projectsBlock}
       </div>`;
   };
 
