@@ -14,6 +14,19 @@ import {
 } from "./utils.mjs";
 import { renderToc } from "./markdown.mjs";
 
+// GitHub 语言色只用于仓库列表的小圆点，取常见语言的近似色。
+const LANGUAGE_COLORS = {
+  Rust: "#dea584",
+  Python: "#3572a5",
+  "C#": "#178600",
+  JavaScript: "#f1e05a",
+  TypeScript: "#3178c6",
+  HTML: "#e34c26",
+  Shell: "#89e051",
+};
+
+const languageColor = (language) => LANGUAGE_COLORS[language] || "#8b9bab";
+
 const ICONS = {
   sun: `<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.93 4.93l1.42 1.42M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.42-1.42M17.66 6.34l1.41-1.41"></path></svg>`,
   moon: `<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M21 12.8A8.4 8.4 0 1 1 11.2 3a6.6 6.6 0 0 0 9.8 9.8Z"></path></svg>`,
@@ -302,16 +315,67 @@ export function createTemplates(site, basePath) {
     </article>`;
   };
 
+  const repositoryList = () => {
+    const repositories = Array.isArray(site.repositories) ? site.repositories : [];
+    const repoCount = String(repositories.length).padStart(2, "0");
+
+    return `
+      <section class="repos" id="repositories" aria-labelledby="repos-title" data-repo-section data-github-user="${escapeAttr(site.author.github)}">
+        <div class="repos__head">
+          <div class="repos__heading">
+            <p class="eyebrow">GITHUB / <span data-repo-count>${repoCount}</span></p>
+            <h2 class="repos__title" id="repos-title">全部仓库</h2>
+            <p class="repos__intro">公开仓库，按最近更新排序。接口不可用时显示构建时的快照。</p>
+          </div>
+          <a class="text-link" href="https://github.com/${escapeAttr(site.author.github)}?tab=repositories" target="_blank" rel="noopener noreferrer">在 GitHub 查看 ${ICONS.arrowRight}</a>
+        </div>
+        <div class="repo-grid" data-repo-list>
+          ${repositories
+            .map(
+              (repo) => `
+            <a class="repo-item" href="${escapeAttr(repo.url)}" target="_blank" rel="noopener noreferrer">
+              <span class="repo-item__top">
+                <span class="repo-item__name">${escapeHtml(repo.name)}</span>
+                <span class="repo-item__arrow" aria-hidden="true">↗</span>
+              </span>
+              <span class="repo-item__desc">${escapeHtml(repo.description || "暂无描述。")}</span>
+              <span class="repo-item__meta">
+                <span class="repo-item__lang"><span class="repo-item__dot" style="--lang-color:${languageColor(repo.language)}"></span>${escapeHtml(repo.language || "Other")}</span>
+                <span>公开</span>
+              </span>
+            </a>`,
+            )
+            .join("")}
+        </div>
+      </section>`;
+  };
+
   const home = ({ posts, tags }) => {
     const projects = Array.isArray(site.projects) ? site.projects : [];
     const projectCount = String(projects.length).padStart(2, "0");
+    const heroSlides =
+      Array.isArray(site.hero.slides) && site.hero.slides.length
+        ? site.hero.slides
+        : [{ title: site.title, description: site.hero.description || "" }];
 
     return `
       <section class="hero">
         <div class="container hero__inner">
           <p class="eyebrow hero__eyebrow">${escapeHtml(site.hero.eyebrow)}</p>
-          <h1 class="hero__title">${site.hero.titleLines.map((line) => `<span>${escapeHtml(line)}</span>`).join("")}</h1>
-          <p class="hero__description">${escapeHtml(site.hero.description)}</p>
+          <h1 class="hero__title hero__title--rotator" data-hero-rotator>
+            ${heroSlides
+              .map(
+                (slide, index) => `<span class="hero__slide${index === 0 ? " is-active" : ""}" data-hero-title aria-hidden="${index === 0 ? "false" : "true"}">${escapeHtml(slide.title)}</span>`,
+              )
+              .join("")}
+          </h1>
+          <p class="hero__description hero__description--rotator">
+            ${heroSlides
+              .map(
+                (slide, index) => `<span class="hero__slide${index === 0 ? " is-active" : ""}" data-hero-description aria-hidden="${index === 0 ? "false" : "true"}">${escapeHtml(slide.description)}</span>`,
+              )
+              .join("")}
+          </p>
           <div class="hero__actions">
             <a class="button button--primary" href="${url("/#projects")}">查看项目 ${ICONS.arrowRight}</a>
             <a class="button button--ghost" href="${url("/about/")}">关于我</a>
@@ -333,7 +397,7 @@ export function createTemplates(site, basePath) {
               <p class="projects__intro">四个已发布工具与一个预留位。只写可验证的实现、边界与取舍。</p>
             </div>
             <div class="projects__links">
-              <a class="text-link" href="https://github.com/${escapeAttr(site.author.github)}?tab=repositories" target="_blank" rel="noopener noreferrer">全部仓库 ${ICONS.arrowRight}</a>
+              <a class="text-link" href="#repositories">全部仓库 ${ICONS.arrowRight}</a>
               <a class="text-link" href="${url("/posts/")}">技术笔记 ${ICONS.arrowRight}</a>
             </div>
           </div>
@@ -342,6 +406,7 @@ export function createTemplates(site, basePath) {
             ${plannedCard()}
           </div>
         </section>
+        ${repositoryList()}
       </div>`;
   };
 

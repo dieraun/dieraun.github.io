@@ -467,14 +467,10 @@ a.tag:hover {
 
 .hero__title {
   max-width: 22em;
-  font-size: clamp(2rem, 4.8vw, 3.35rem);
-  font-weight: 700;
-  line-height: 1.24;
-  letter-spacing: -0.025em;
-}
-
-.hero__title span {
-  display: block;
+  font-size: clamp(2rem, 4.8vw, 3rem);
+  font-weight: 800;
+  line-height: 1.18;
+  letter-spacing: -0.03em;
 }
 
 .hero__description {
@@ -483,6 +479,29 @@ a.tag:hover {
   color: var(--muted);
   font-size: 16px;
   line-height: 1.8;
+}
+
+/* 4 组文案叠放在同一网格单元里，容器高度取最高一组，切换时不跳动。 */
+.hero__title--rotator,
+.hero__description--rotator {
+  display: grid;
+}
+
+.hero__title--rotator .hero__slide,
+.hero__description--rotator .hero__slide {
+  grid-area: 1 / 1;
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity 0.6s ease-in-out,
+    visibility 0s linear 0.6s;
+}
+
+.hero__title--rotator .hero__slide.is-active,
+.hero__description--rotator .hero__slide.is-active {
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 0.6s ease-in-out;
 }
 
 .hero__actions {
@@ -743,7 +762,106 @@ a.tag:hover {
   line-height: 1.7;
 }
 
-/* 7. 列表页与文章卡片 ---------------------------------------------------- */
+/* 7. GitHub 全部仓库 ----------------------------------------------------- */
+.repos {
+  padding: 0 0 64px;
+  scroll-margin-top: calc(var(--header-height) + 24px);
+}
+
+.repos__head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--border);
+}
+
+.repos__title {
+  margin-top: 6px;
+  font-size: 1.35rem;
+  font-weight: 700;
+}
+
+.repos__intro {
+  max-width: 38em;
+  margin: 6px 0 0;
+  color: var(--muted);
+  font-size: 12.5px;
+  line-height: 1.7;
+}
+
+.repo-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  column-gap: 32px;
+}
+
+.repo-item {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 4px;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--border);
+  text-decoration: none;
+}
+
+.repo-item:hover .repo-item__name {
+  color: var(--accent-strong);
+}
+
+.repo-item__top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.repo-item__name {
+  overflow-wrap: anywhere;
+  color: var(--text-strong);
+  font: 600 13px/1.5 var(--font-mono);
+}
+
+.repo-item__arrow {
+  flex: none;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.repo-item__desc {
+  display: -webkit-box;
+  overflow: hidden;
+  color: var(--muted);
+  font-size: 12.5px;
+  line-height: 1.6;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.repo-item__meta {
+  display: flex;
+  gap: 14px;
+  color: var(--muted);
+  font: 10px/1.5 var(--font-mono);
+}
+
+.repo-item__lang {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.repo-item__dot {
+  width: 7px;
+  height: 7px;
+  flex: none;
+  border-radius: 50%;
+  background: var(--lang-color, var(--muted));
+}
+
+/* 8. 列表页与文章卡片 ---------------------------------------------------- */
 .page-head {
   padding: 48px 0 26px;
   border-bottom: 1px solid var(--border);
@@ -934,7 +1052,7 @@ a.tag:hover {
   color: var(--border-strong);
 }
 
-/* 8. 标签页 -------------------------------------------------------------- */
+/* 9. 标签页 -------------------------------------------------------------- */
 .tag-filter {
   display: flex;
   flex-wrap: wrap;
@@ -991,7 +1109,7 @@ a.tag:hover {
   text-align: center;
 }
 
-/* 9. 文章详情 ------------------------------------------------------------ */
+/* 10. 文章详情 ------------------------------------------------------------ */
 .container--post {
   width: min(100% - 40px, 1040px);
 }
@@ -1331,7 +1449,7 @@ a.tag:hover {
 .tok-variable { color: var(--tok-variable); }
 .tok-decorator { color: var(--tok-decorator); }
 
-/* 10. 文章页脚 / 上下篇 -------------------------------------------------- */
+/* 11. 文章页脚 / 上下篇 -------------------------------------------------- */
 .post__footer {
   max-width: var(--reading);
   margin-top: 48px;
@@ -1407,7 +1525,7 @@ a.tag:hover {
   grid-column: 1;
 }
 
-/* 11. 关于页 ------------------------------------------------------------- */
+/* 12. 关于页 ------------------------------------------------------------- */
 .container--about {
   width: min(100% - 40px, 1040px);
 }
@@ -1525,7 +1643,7 @@ a.tag:hover {
   line-height: 1.75;
 }
 
-/* 12. 404 ---------------------------------------------------------------- */
+/* 13. 404 ---------------------------------------------------------------- */
 .not-found {
   padding: 84px 0 100px;
   border-bottom: 1px solid var(--border);
@@ -1561,7 +1679,7 @@ a.tag:hover {
   margin-top: 26px;
 }
 
-/* 13. 页脚 / 回到顶部 ---------------------------------------------------- */
+/* 14. 页脚 / 回到顶部 ---------------------------------------------------- */
 .site-footer {
   border-top: 1px solid var(--border);
   background: var(--bg-elevated);
@@ -1647,7 +1765,7 @@ a.tag:hover {
   border-color: var(--accent);
 }
 
-/* 14. 响应式 ------------------------------------------------------------- */
+/* 15. 响应式 ------------------------------------------------------------- */
 @media (max-width: 1024px) {
   .project-grid {
     gap: 12px;
@@ -1925,6 +2043,16 @@ a.tag:hover {
     flex-direction: column;
   }
 
+  .repos__head {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .repo-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
   .archive-item {
     grid-template-columns: 62px minmax(0, 1fr);
     gap: 12px;
@@ -2017,7 +2145,7 @@ a.tag:hover {
   }
 }
 
-/* 15. 打印 --------------------------------------------------------------- */
+/* 16. 打印 --------------------------------------------------------------- */
 @media print {
   .site-header,
   .site-footer,
@@ -2057,5 +2185,10 @@ a.tag:hover {
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
+  }
+
+  .hero__title--rotator .hero__slide,
+  .hero__description--rotator .hero__slide {
+    transition: none;
   }
 }

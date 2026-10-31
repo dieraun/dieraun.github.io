@@ -39,11 +39,31 @@ const siteConfig = {
   ],
 
   // ---- 首屏 -----------------------------------------------------
+  // 轮播文案：前端每 5 秒切换一次，首屏直接输出第一组，禁用 JS 时仍可阅读。
   hero: {
-    eyebrow: "REVERSE ENGINEERING · ARCHIVE PARSING · SYSTEMS",
-    titleLines: ["专注二进制逆向、归档格式解析与跨平台高性能工具开发。"],
-    description:
-      "以静态分析、只读解析和可复现构建为基础，重写仍在维护的旧工具。",
+    eyebrow: "PERSONAL NOTES · OPEN SOURCE",
+    slides: [
+      {
+        title: "试图重写旧工具的开源爱好者 🛠️",
+        description:
+          "代码能跑就行（不是），其实在追求可复现构建的路上越走越远 (๑•̀ㅂ•́)و✧",
+      },
+      {
+        title: "一个喜欢折腾底层技术的普通人 🌟",
+        description:
+          "欢迎来到我的数字自留地，这里存放着关于逆向、解析和系统的碎碎念~",
+      },
+      {
+        title: "沉迷二进制逆向，偶尔修修破车 💻",
+        description:
+          "每天都在和跨平台工具、静态分析死磕，今天也是没有 Bug 的一天呢 (´･ω･`)",
+      },
+      {
+        title: "靠咖啡续命的跨平台开发者 ☕️",
+        description:
+          "只管埋头写代码，剩下的交给老天爷吧 🚀 欢迎常来看看！",
+      },
+    ],
   },
 
   // ---- 项目 -----------------------------------------------------
@@ -117,6 +137,60 @@ const siteConfig = {
       "目标：解析 pkg / mpkg 容器与资源索引，提供只读挂载、资源导出与完整性校验。",
     tags: ["逆向", "格式解析", "Rust", "规划"],
   },
+
+  // ---- GitHub 全部仓库 ------------------------------------------
+  // 先作为静态快照随 HTML 输出；main.js 会尝试从 GitHub API 刷新，
+  // 接口不可用或触发限流时继续显示这份快照。
+  repositories: [
+    {
+      name: "Formflux",
+      description: "本地优先的离线多媒体、图像、文档与哈希工具箱。",
+      language: "Rust",
+      url: "https://github.com/dieraun/Formflux",
+    },
+    {
+      name: "RePKG-Enhanced",
+      description: "跨平台 Wallpaper Engine PKG 解包器，支持流式大文件与批量处理。",
+      language: "C#",
+      url: "https://github.com/dieraun/RePKG-Enhanced",
+    },
+    {
+      name: "Device-Viewer",
+      description: "跨平台硬件信息查看器，Rust + egui，提供 GUI 与 CLI。",
+      language: "Rust",
+      url: "https://github.com/dieraun/Device-Viewer",
+    },
+    {
+      name: "dieraun.github.io",
+      description: "本站源码、模板与零依赖构建脚本。",
+      language: "JavaScript",
+      url: "https://github.com/dieraun/dieraun.github.io",
+    },
+    {
+      name: "rpa-extract-analyzer",
+      description: "Ren'Py RPA 只读解析与静态密钥提取工具。",
+      language: "Python",
+      url: "https://github.com/dieraun/rpa-extract-analyzer",
+    },
+    {
+      name: "mp4_merger",
+      description: "基于 FFmpeg 的 Windows 批量视频合并工具。",
+      language: "Python",
+      url: "https://github.com/dieraun/mp4_merger",
+    },
+    {
+      name: "campbuddy-rpa-unpacker-",
+      description: "CampBuddy RPA-3.0 资源归档解包工具。",
+      language: "Python",
+      url: "https://github.com/dieraun/campbuddy-rpa-unpacker-",
+    },
+    {
+      name: "myweblearn114",
+      description: "HTML 学习与实验页面。",
+      language: "HTML",
+      url: "https://github.com/dieraun/myweblearn114",
+    },
+  ],
 
   // ---- 关于页 ---------------------------------------------------
   stack: ["Rust", "Python", "并发编程", "egui", "自动化 CI 发布"],
