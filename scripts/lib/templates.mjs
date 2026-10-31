@@ -86,7 +86,7 @@ export function createTemplates(site, basePath) {
       </div>
       <div class="container site-footer__bottom">
         <p>© ${year} ${escapeHtml(site.author.name)}</p>
-        <p>由 Markdown 与一点原生 JavaScript 驱动</p>
+        <p>静态生成 · 无第三方运行时</p>
       </div>
     </footer>`;
 
@@ -240,33 +240,65 @@ export function createTemplates(site, basePath) {
   const projectCard = (project, index) => {
     const repoUrl = `https://github.com/${site.author.github}/${project.repo}`;
     const tags = Array.isArray(project.tags) ? project.tags : [];
-    const icon = ICONS[project.icon] || ICONS.chart;
+    const highlights = Array.isArray(project.highlights) ? project.highlights : [];
 
     return `
-    <article class="project-card">
-      <div class="project-card__top">
-        <span class="project-card__index" aria-hidden="true">${String(index + 1).padStart(2, "0")}</span>
-        <span class="project-card__icon" aria-hidden="true">${icon}</span>
-      </div>
-      <p class="project-card__kicker">
-        <span>${escapeHtml(project.kicker)}</span>
-        <code>${escapeHtml(site.author.github)}/${escapeHtml(project.repo)}</code>
-      </p>
-      <h3 class="project-card__title"><a href="${escapeAttr(repoUrl)}" target="_blank" rel="noopener noreferrer">${escapeHtml(project.title)}</a></h3>
-      <p class="project-card__description">${escapeHtml(project.description)}</p>
-      <div class="project-card__usage">
-        <p class="project-card__usage-label">快速开始</p>
-        <p class="project-card__usage-text">${escapeHtml(project.usage)}</p>
-        <code class="project-card__command"><span>git clone https://github.com/${escapeHtml(site.author.github)}/${escapeHtml(project.repo)}.git</span><span>${escapeHtml(project.command)}</span></code>
-      </div>
-      <div class="project-card__footer">
-        <div class="tag-list">
-          ${tags.map((tag) => `<span class="tag">#${escapeHtml(tag)}</span>`).join("")}
+    <article class="project-card" id="project-${index + 1}">
+      <header class="project-card__head">
+        <div>
+          <p class="project-card__index">${String(index + 1).padStart(2, "0")} / ${escapeHtml(project.subtitle)}</p>
+          <h3 class="project-card__title"><a href="${escapeAttr(repoUrl)}" target="_blank" rel="noopener noreferrer">${escapeHtml(project.title)}</a></h3>
         </div>
-        <a class="project-card__repo" href="${escapeAttr(repoUrl)}" target="_blank" rel="noopener noreferrer" aria-label="在 GitHub 查看 ${escapeAttr(project.repo)}">
-          查看仓库 ${ICONS.arrowRight}
-        </a>
-      </div>
+        <a class="project-card__repo-link" href="${escapeAttr(repoUrl)}" target="_blank" rel="noopener noreferrer">${escapeHtml(site.author.github)}/${escapeHtml(project.repo)} ${ICONS.github}</a>
+      </header>
+
+      <dl class="project-card__spec">
+        <div class="project-card__row">
+          <dt>技术栈</dt>
+          <dd class="project-card__stack">${escapeHtml(project.stack)}</dd>
+        </div>
+        <div class="project-card__row">
+          <dt>核心亮点</dt>
+          <dd><ul class="project-card__list">${highlights.map((item) => `<li>${escapeHtml(item)}</li>`).join("")}</ul></dd>
+        </div>
+        <div class="project-card__row">
+          <dt>快速上手</dt>
+          <dd><pre class="project-card__pre"><code>${escapeHtml(project.clone)}\n${escapeHtml(project.run)}</code></pre></dd>
+        </div>
+      </dl>
+
+      <footer class="project-card__footer">
+        <div class="tag-list">
+          ${tags.map((tag) => `<span class="tag">${escapeHtml(tag)}</span>`).join("")}
+        </div>
+        <a class="button button--ghost button--small" href="${escapeAttr(repoUrl)}" target="_blank" rel="noopener noreferrer">查看仓库 ${ICONS.arrowRight}</a>
+      </footer>
+    </article>`;
+  };
+
+  const plannedCard = () => {
+    const planned = site.plannedProject;
+    if (!planned) return "";
+    return `
+    <article class="project-card project-card--planned">
+      <header class="project-card__head">
+        <div>
+          <p class="project-card__index">${escapeHtml(planned.code)}</p>
+          <h3 class="project-card__title">${escapeHtml(planned.title)}</h3>
+        </div>
+        <span class="project-card__status">预留位置</span>
+      </header>
+      <p class="project-card__subtitle">${escapeHtml(planned.subtitle)}</p>
+      <p class="project-card__planned-description">${escapeHtml(planned.description)}</p>
+      <dl class="project-card__spec">
+        <div class="project-card__row">
+          <dt>技术栈</dt>
+          <dd class="project-card__stack">${escapeHtml(planned.stack)}</dd>
+        </div>
+      </dl>
+      <footer class="project-card__footer">
+        <div class="tag-list">${planned.tags.map((tag) => `<span class="tag">${escapeHtml(tag)}</span>`).join("")}</div>
+      </footer>
     </article>`;
   };
 
@@ -274,51 +306,42 @@ export function createTemplates(site, basePath) {
     const projects = Array.isArray(site.projects) ? site.projects : [];
     const projectCount = String(projects.length).padStart(2, "0");
 
-    const projectsBlock = projects.length
-      ? `
-      <section class="section projects" id="projects" aria-labelledby="projects-title">
-        <div class="section__head projects__head">
-          <div class="projects__heading">
-            <p class="eyebrow">Open Source · ${projectCount}</p>
-            <h2 class="section__title" id="projects-title">最近在做的开源项目</h2>
-            <p class="projects__intro">几个小工具，解决真实工作里反复出现的问题。都可以单独 clone、运行。</p>
-          </div>
-          <div class="projects__links">
-            <a class="text-link" href="https://github.com/${escapeAttr(site.author.github)}?tab=repositories" target="_blank" rel="noopener noreferrer">全部仓库 ${ICONS.arrowRight}</a>
-            <a class="text-link" href="${url("/posts/")}">技术文章 ${ICONS.arrowRight}</a>
-          </div>
-        </div>
-        <div class="project-grid">
-          ${projects.map((project, index) => projectCard(project, index)).join("")}
-        </div>
-      </section>`
-      : "";
-
     return `
       <section class="hero">
         <div class="container hero__inner">
-          <div class="hero__content">
-            <p class="eyebrow hero__eyebrow">${escapeHtml(site.hero.eyebrow)}</p>
-            <h1 class="hero__title">${site.hero.titleLines.map((line) => `<span>${escapeHtml(line)}</span>`).join("")}</h1>
-            <p class="hero__description">${escapeHtml(site.hero.description)}</p>
-            <div class="hero__actions">
-              <a class="button button--primary" href="${url("/#projects")}">查看项目 ${ICONS.arrowRight}</a>
-              <a class="button button--ghost" href="${url("/about/")}">关于我</a>
-            </div>
-            <dl class="hero__stats">
-              <div><dt>开源项目</dt><dd>${projectCount}</dd></div>
-              <div><dt>技术文章</dt><dd>${posts.length}</dd></div>
-              <div><dt>标签</dt><dd>${tags.length}</dd></div>
-            </dl>
+          <p class="eyebrow hero__eyebrow">${escapeHtml(site.hero.eyebrow)}</p>
+          <h1 class="hero__title">${site.hero.titleLines.map((line) => `<span>${escapeHtml(line)}</span>`).join("")}</h1>
+          <p class="hero__description">${escapeHtml(site.hero.description)}</p>
+          <div class="hero__actions">
+            <a class="button button--primary" href="${url("/#projects")}">查看项目 ${ICONS.arrowRight}</a>
+            <a class="button button--ghost" href="${url("/about/")}">关于我</a>
           </div>
-          <div class="hero__art" aria-hidden="true">
-            <img src="${url("/assets/images/reading-scale.svg")}" alt="" width="420" height="420" loading="eager" decoding="async">
-          </div>
+          <dl class="hero__stats">
+            <div><dt>开源项目</dt><dd>${projectCount}</dd></div>
+            <div><dt>技术文章</dt><dd>${posts.length}</dd></div>
+            <div><dt>标签</dt><dd>${tags.length}</dd></div>
+          </dl>
         </div>
       </section>
 
       <div class="container">
-        ${projectsBlock}
+        <section class="section projects" id="projects" aria-labelledby="projects-title">
+          <div class="section__head projects__head">
+            <div class="projects__heading">
+              <p class="eyebrow">SELECTED WORK / ${projectCount}</p>
+              <h2 class="section__title" id="projects-title">项目</h2>
+              <p class="projects__intro">四个已发布工具与一个预留位。只写可验证的实现、边界与取舍。</p>
+            </div>
+            <div class="projects__links">
+              <a class="text-link" href="https://github.com/${escapeAttr(site.author.github)}?tab=repositories" target="_blank" rel="noopener noreferrer">全部仓库 ${ICONS.arrowRight}</a>
+              <a class="text-link" href="${url("/posts/")}">技术笔记 ${ICONS.arrowRight}</a>
+            </div>
+          </div>
+          <div class="project-grid">
+            ${projects.map((project, index) => projectCard(project, index)).join("")}
+            ${plannedCard()}
+          </div>
+        </section>
       </div>`;
   };
 
@@ -364,7 +387,7 @@ export function createTemplates(site, basePath) {
         <header class="page-head">
           <p class="eyebrow">Archive</p>
           <h1 class="page-head__title">全部文章</h1>
-          <p class="page-head__description">共 ${posts.length} 篇。按时间排列，慢慢读。</p>
+          <p class="page-head__description">共 ${posts.length} 篇。逆向、归档格式、性能与底层工程笔记。</p>
         </header>
         <div class="archive">${groups}</div>
       </div>`;
@@ -445,7 +468,7 @@ export function createTemplates(site, basePath) {
         <header class="page-head">
           <p class="eyebrow">Index</p>
           <h1 class="page-head__title">标签</h1>
-          <p class="page-head__description">按主题浏览。选择一个标签，筛选出相关的文章。</p>
+          <p class="page-head__description">按逆向、格式解析、性能、语言与工具链筛选技术笔记。</p>
         </header>
 
         <div class="tag-filter" data-tag-filter-group>
@@ -472,13 +495,12 @@ export function createTemplates(site, basePath) {
   const about = ({ page }) => `
     <div class="container container--about">
       <header class="about-hero">
-        <img class="about-hero__avatar" src="${url("/assets/images/avatar.svg")}" alt="${escapeAttr(site.author.name)} 的头像" width="140" height="140" loading="eager" decoding="async">
         <div class="about-hero__body">
-          <p class="eyebrow">About</p>
+          <p class="eyebrow">ABOUT / PROFILE</p>
           <h1 class="about-hero__title">${escapeHtml(page.title || site.author.name)}</h1>
           <p class="about-hero__bio">${escapeHtml(site.author.bio)}</p>
           <div class="about-hero__links">
-            <a class="button button--primary button--small" href="mailto:${escapeAttr(site.author.email)}">${ICONS.mail} 写封邮件</a>
+            <a class="button button--primary button--small" href="mailto:${escapeAttr(site.author.email)}">${ICONS.mail} 邮件</a>
             <a class="button button--ghost button--small" href="https://github.com/${escapeAttr(site.author.github)}" rel="me noopener noreferrer">${ICONS.github} GitHub</a>
           </div>
         </div>
@@ -496,16 +518,16 @@ export function createTemplates(site, basePath) {
             </ul>
           </section>
           <section class="about-card">
-            <h2 class="about-card__title">保持联系</h2>
+            <h2 class="about-card__title">联系</h2>
             <ul class="contact-list">
               <li><span>邮箱</span><a href="mailto:${escapeAttr(site.author.email)}">${escapeHtml(site.author.email)}</a></li>
               <li><span>GitHub</span><a href="https://github.com/${escapeAttr(site.author.github)}" rel="me noopener noreferrer">@${escapeHtml(site.author.github)}</a></li>
-              <li><span>RSS</span><a href="${url("/feed.xml")}">订阅更新</a></li>
+              <li><span>RSS</span><a href="${url("/feed.xml")}">技术笔记更新</a></li>
             </ul>
           </section>
           <section class="about-card about-card--note">
-            <h2 class="about-card__title">关于这个博客</h2>
-            <p>纯静态、零第三方依赖。文章写在 Markdown 里，由一个小构建脚本生成 HTML，托管在 GitHub Pages 上。</p>
+            <h2 class="about-card__title">站点约束</h2>
+            <p>纯静态、零第三方依赖。Markdown 由本地构建脚本生成 HTML，产物可逐页审计，部署于 GitHub Pages。</p>
           </section>
         </aside>
       </div>

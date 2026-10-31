@@ -1,36 +1,33 @@
 /**
  * 站点基础配置
  * ------------------------------------------------------------
- * 这是整个博客唯一需要经常修改的配置文件。
- * 修改后重新运行 `npm run build` 即可生效。
- *
- * 部署到 GitHub Pages 时，Actions 会通过 BASE_PATH 环境变量
- * 自动传入仓库的子路径，一般不需要手动修改 basePath。
+ * 修改后运行 `npm run build` 生效。
+ * GitHub Pages 的子路径由 Actions 的 BASE_PATH 自动注入。
  */
 const siteConfig = {
   // ---- 站点身份 -------------------------------------------------
   title: "SU2.Dieraun",
   mark: "S",
-  description: "Dieraun 的个人博客，记录前端开发、设计思考与日常生活。",
-  tagline: "技术、设计与日常思考",
+  description:
+    "Dieraun 的技术作品集：二进制逆向、私有归档格式解析、跨平台高性能工具与底层工程笔记。",
+  tagline: "二进制逆向 · 归档格式解析 · 跨平台工具",
 
   author: {
     name: "Dieraun",
     email: "yanruoxinsu2@outlook.com",
     github: "dieraun",
-    bio: "一个喜欢前端、设计与写作的人。相信把复杂的事讲清楚，本身就是一种创造。",
+    bio: "专注二进制逆向、私有归档格式解析与跨平台高性能工具开发。",
   },
 
   // ---- 地址 -----------------------------------------------------
-  // 用户主页仓库使用根路径；若绑定自定义域名，也保持 "/"。
   url: "https://dieraun.github.io",
   basePath: "/",
   locale: "zh-CN",
 
   // ---- 主题色 ---------------------------------------------------
   theme: {
-    light: "#f7faff",
-    dark: "#0b1220",
+    light: "#f2f5f8",
+    dark: "#0e1319",
   },
 
   // ---- 导航 -----------------------------------------------------
@@ -41,68 +38,91 @@ const siteConfig = {
     { key: "about", label: "关于", href: "/about/" },
   ],
 
-  // ---- 首页文案 -------------------------------------------------
+  // ---- 首屏 -----------------------------------------------------
   hero: {
-    eyebrow: "开源项目 · 技术随笔",
-    titleLines: ["把复杂的事，", "写简单一点。"],
+    eyebrow: "REVERSE ENGINEERING · ARCHIVE PARSING · SYSTEMS",
+    titleLines: ["专注二进制逆向、归档格式解析与跨平台高性能工具开发。"],
     description:
-      "我做工具，也写字。这里放着四个正在维护的开源项目，以及关于前端、设计与日常的思考。",
+      "以静态分析、只读解析和可复现构建为基础，重写仍在维护的旧工具。",
   },
 
-  // ---- 首页开源项目 ---------------------------------------------
-  // 修改这里即可更新首页卡片；repo 对应 GitHub 仓库名。
+  // ---- 项目 -----------------------------------------------------
+  // 每项：repo 对应 GitHub 仓库名；clone/run 显示在“快速上手”。
   projects: [
     {
       repo: "rpa-extract-analyzer",
-      icon: "chart",
-      kicker: "RPA · 数据分析",
-      title: "RPA 数据提取，不该靠复制粘贴。",
-      description:
-        "把网页、表格与日志里的 RPA 运行数据批量抽取，清洗后输出可直接分析的 CSV / JSON。",
-      usage: "克隆后安装依赖，指定数据目录即可运行分析。",
-      command: "python analyze.py --input ./data",
-      tags: ["RPA", "数据提取", "Python", "效率工具"],
+      title: "rpa-extract-analyzer",
+      subtitle: "Ren'Py RPA 归档逆向解析",
+      stack: "Python 3.11 · AST · CLI · pytest",
+      highlights: [
+        "对标 rpx / unrpa / rpatool：无需加载游戏运行时，直接解析 loader.pyo 结构。",
+        "静态 AST 分析提取密钥与索引，只读解析归档，不执行字节码。",
+        "流式解包，内存占用与归档体积解耦；输出路径做穿越校验。",
+      ],
+      clone: "git clone https://github.com/dieraun/rpa-extract-analyzer.git",
+      run: "python rpa_extract.py unpack archive.rpa -o out",
+      tags: ["逆向", "解析", "Python", "CLI", "安全"],
     },
     {
       repo: "mp4_merger",
-      icon: "video",
-      kicker: "视频处理 · 命令行",
-      title: "一键合并 MP4，把时间留给内容。",
-      description:
-        "不用打开剪辑软件，直接输入文件路径就能按顺序快速合并，适合处理零散的录屏与素材。",
-      usage: "把待合并的文件路径交给脚本，回车完成。",
-      command: "python mp4_merger.py --files a.mp4 b.mp4",
-      tags: ["视频处理", "MP4", "FFmpeg", "工具"],
+      title: "mp4_merger",
+      subtitle: "基于 FFmpeg 的批量媒体合并 CLI",
+      stack: "Python · FFmpeg · subprocess · CLI",
+      highlights: [
+        "封装 FFmpeg concat demuxer，避免逐帧转码带来的画质与时间损耗。",
+        "批量任务串行调度，失败项保留原始 stderr，便于定位编码问题。",
+        "只依赖系统 FFmpeg，单文件脚本可审计，无 GUI 与额外运行时依赖。",
+      ],
+      clone: "git clone https://github.com/dieraun/mp4_merger.git",
+      run: "python mp4_merger.py --files a.mp4 b.mp4 -o merged.mp4",
+      tags: ["FFmpeg", "CLI", "批处理", "视频处理"],
     },
     {
       repo: "campbuddy-rpa-unpacker-",
-      icon: "box",
-      kicker: "RPA · 资源解包",
-      title: "资源解包，也可以是一键的事。",
-      description:
-        "针对特定 RPA 场景的资源目录，一键还原图片、配置与文本素材，并附带完整的环境说明。",
-      usage: "配置好环境，指定资源目录，一条命令开始解包。",
-      command: "python unpacker.py --dir ./resources",
-      tags: ["RPA", "解包工具", "逆向", "实战"],
+      title: "campbuddy-rpa-unpacker",
+      subtitle: "定向 RPA 资源归档解包",
+      stack: "Python · 二进制解析 · CLI",
+      highlights: [
+        "针对特定 RPA 资源布局重建索引，处理通用解包器无法识别的私有头。",
+        "解析前校验魔数、偏移与长度，拒绝越界读取与路径穿越。",
+        "单命令输出原始目录树，保留资源命名与相对路径。",
+      ],
+      clone: "git clone https://github.com/dieraun/campbuddy-rpa-unpacker-.git",
+      run: "python unpacker.py --dir ./resources -o ./output",
+      tags: ["逆向", "RPA", "解包", "Python"],
     },
     {
       repo: "Device-Viewer",
-      icon: "monitor",
-      kicker: "设备互联 · 局域网",
-      title: "跨设备查看，不必离开座位。",
-      description:
-        "在局域网内把移动端画面实时投到电脑，多设备切换查看，延迟低，也不需要数据线。",
-      usage: "电脑与手机连接同一 Wi-Fi，启动服务后输入地址。",
-      command: "python server.py --port 8080",
-      tags: ["设备互联", "远程查看", "局域网", "监控"],
+      title: "device-viewer",
+      subtitle: "局域网低延迟画面串流",
+      stack: "Rust · WebSocket · egui · 并发",
+      highlights: [
+        "采集端与查看端分离，帧数据只走局域网 WebSocket，不经过公网中转。",
+        "有界通道与背压控制，弱网下丢帧而不是无限堆积内存。",
+        "CLI 启动 + egui 查看器，跨平台构建；仅监听显式绑定的内网地址。",
+      ],
+      clone: "git clone https://github.com/dieraun/Device-Viewer.git",
+      run: "cargo run --release -- --bind 0.0.0.0:8080",
+      tags: ["串流", "Rust", "局域网", "egui"],
     },
   ],
 
+  // 预留项目位：后续实现 Wallpaper Engine 解包工具时替换为正式 projects 项。
+  plannedProject: {
+    code: "05 / PLANNED",
+    title: "wallpaper-engine-pkg",
+    subtitle: "Wallpaper Engine pkg / mpkg 解包",
+    stack: "Rust · 归档解析 · CLI + GUI",
+    description:
+      "目标：解析 pkg / mpkg 容器与资源索引，提供只读挂载、资源导出与完整性校验。",
+    tags: ["逆向", "格式解析", "Rust", "规划"],
+  },
+
   // ---- 关于页 ---------------------------------------------------
-  stack: ["HTML / CSS", "JavaScript / TypeScript", "Node.js", "设计系统", "可访问性"],
+  stack: ["Rust", "Python", "并发编程", "egui", "自动化 CI 发布"],
 
   // ---- 页脚 -----------------------------------------------------
-  footerNote: "用 Markdown 写作，用原生 Web 呈现。",
+  footerNote: "静态生成，构建产物可直接审计。",
   ogImage: "/og-cover.png",
 };
 
