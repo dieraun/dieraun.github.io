@@ -237,17 +237,38 @@ export function createTemplates(site, basePath) {
     </article>`;
   };
 
+  const TECH_TONES = {
+    Rust: "rust",
+    Python: "python",
+    "C#": "csharp",
+    FFmpeg: "ffmpeg",
+    CLI: "cli",
+  };
+
   const projectCard = (project, index) => {
     const repoUrl = `https://github.com/${site.author.github}/${project.repo}`;
     const tags = Array.isArray(project.tags) ? project.tags : [];
     const highlights = Array.isArray(project.highlights) ? project.highlights : [];
+    const rawTech =
+      project.repo === "mp4_merger"
+        ? "FFmpeg"
+        : String(project.stack || "").split(" · ")[0].trim() || "Tool";
+    const tech = rawTech.startsWith("Python")
+      ? "Python"
+      : rawTech.startsWith("Node.js")
+        ? "Node.js"
+        : rawTech;
+    const techTone = TECH_TONES[tech] || "neutral";
 
     return `
     <article class="project-card" id="project-${index + 1}">
       <header class="project-card__head">
         <div>
           <p class="project-card__index">${String(index + 1).padStart(2, "0")} / ${escapeHtml(project.subtitle)}</p>
-          <h3 class="project-card__title"><a href="${escapeAttr(repoUrl)}" target="_blank" rel="noopener noreferrer">${escapeHtml(project.title)}</a></h3>
+          <div class="project-card__title-row">
+            <h3 class="project-card__title"><a href="${escapeAttr(repoUrl)}" target="_blank" rel="noopener noreferrer">${escapeHtml(project.title)}</a></h3>
+            <span class="tech-badge tech-badge--${techTone}" aria-hidden="true">${escapeHtml(tech)}</span>
+          </div>
         </div>
         <a class="project-card__repo-link" href="${escapeAttr(repoUrl)}" target="_blank" rel="noopener noreferrer">${escapeHtml(site.author.github)}/${escapeHtml(project.repo)} ${ICONS.github}</a>
       </header>
